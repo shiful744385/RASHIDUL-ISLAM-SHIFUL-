@@ -1140,36 +1140,38 @@ if (loginForm) {
         © 2026 RASHIDUL ISLAM SHIFUL
 
     </div>
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+  const firebaseConfig = {
+    // আপনার Firebase Config এখানে বসাবেন
+  };
 
-const firebaseConfig = {
-  // আপনার Firebase Config এখানে বসাবেন
-};
-\`\<script type="module"\>\`
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const errorElement = document.getElementById('authError');
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorElement = document.getElementById('authError');
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        alert('Successfully logged in: ' + userCredential.user.email);
-      })
-      .catch((error) => {
-        if (errorElement) {
-          errorElement.textContent = error.message;
-        }
-      });
-  });
-}`&lt;/script&gt;`
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert('Successfully logged in: ' + userCredential.user.email);
+        })
+        .catch((error) => {
+          if (errorElement) {
+            errorElement.textContent = error.message;
+          }
+        });
+    });
+  }
+</script>
+    
     
 </main>
 
