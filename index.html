@@ -49,18 +49,22 @@
             appId: "1:723273672083:web:6c92ebcaefafed0b6cf466"
 
         };
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-        const app = initializeApp(firebaseConfig);
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4VbpTMTpNRlloRxuRQOc-XeAHQFlj90o",
+    authDomain: "encrypted-message-32386.firebaseapp.com",
+    projectId: "encrypted-message-32386",
+    storageBucket: "encrypted-message-32386.firebasestorage.app",
+    messagingSenderId: "723273672083",
+    appId: "1:723273672083:web:6c92obcaefafed0b6cf466"
+  };
 
-        import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
-const firebaseConfig = {
-  // আপনার Firebase Config এখানে বসাবেন
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+        
 
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
