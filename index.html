@@ -1,344 +1,1265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JM16CGGGP"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-H903BG4M5H');
-    </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>RASHIDUL ISLAM SHIFUL</title>
-    <meta name="description" content="RASHIDUL ISLAM SHIFUL - Personal Website">
+
+    <meta name="description"
+          content="RASHIDUL ISLAM SHIFUL - Personal Website">
+
     <meta name="theme-color" content="#080808">
 
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+        import {
+            getDatabase,
+            ref,
+            push,
+            onChildAdded
+        }
+        from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+        /* =========================================
+           FIREBASE CONFIG
+           এখানে তোমার Firebase config বসাবে
+           ========================================= */
+
+        const firebaseConfig = {
+
+            apiKey: "YOUR_API_KEY",
+
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+
+            databaseURL:
+                "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+
+            projectId: "YOUR_PROJECT_ID",
+
+            storageBucket:
+                "YOUR_PROJECT.firebasestorage.app",
+
+            messagingSenderId: "YOUR_SENDER_ID",
+
+            appId: "YOUR_APP_ID"
+
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+        const db = getDatabase(app);
+
+        const messagesRef = ref(db, "messages");
+
+        /* =========================================
+           SEND MESSAGE
+           ========================================= */
+
+        window.sendMessage = function () {
+
+            const nameInput =
+                document.getElementById("chatName");
+
+            const messageInput =
+                document.getElementById("chatMessage");
+
+            const name =
+                nameInput.value.trim();
+
+            const message =
+                messageInput.value.trim();
+
+            if (!name) {
+
+                alert("Please enter your name.");
+
+                return;
+            }
+
+            if (!message) {
+
+                return;
+            }
+
+            push(messagesRef, {
+
+                name: name,
+
+                message: message,
+
+                time: Date.now()
+
+            });
+
+            messageInput.value = "";
+
+        };
+
+
+        /* =========================================
+           RECEIVE LIVE MESSAGE
+           ========================================= */
+
+        onChildAdded(messagesRef, (snapshot) => {
+
+            const data = snapshot.val();
+
+            const chatBox =
+                document.getElementById("chatMessages");
+
+            const messageDiv =
+                document.createElement("div");
+
+            messageDiv.className =
+                "chat-message";
+
+            messageDiv.innerHTML = `
+
+                <div class="message-name">
+                    ${escapeHTML(data.name)}
+                </div>
+
+                <div class="message-text">
+                    ${escapeHTML(data.message)}
+                </div>
+
+            `;
+
+            chatBox.appendChild(messageDiv);
+
+            chatBox.scrollTop =
+                chatBox.scrollHeight;
+
+        });
+
+
+        /* Security: prevent HTML injection */
+
+        function escapeHTML(text) {
+
+            const div =
+                document.createElement("div");
+
+            div.textContent = text;
+
+            return div.innerHTML;
+
+        }
+
+    </script>
+
+
+    <!-- Google Analytics -->
+
+    <script async
+        src="https://www.googletagmanager.com/gtag/js?id=G-JM16CGGGP">
+    </script>
+
+    <script>
+
+        window.dataLayer =
+            window.dataLayer || [];
+
+        function gtag(){
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config',
+             'G-H903BG4M5H');
+
+    </script>
+
+
     <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-            body {
-    min-height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
 
-    background:
-        linear-gradient(rgba(0, 0, 20, 0.45), rgba(0, 0, 10, 0.75)),
-        url("japan.png") center center / cover fixed no-repeat;
+        body {
 
-    color: white;
-            } }
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+
+                linear-gradient(
+                    rgba(0,0,20,0.45),
+                    rgba(0,0,10,0.78)
+                ),
+
+                url("japan.png")
+                center center /
+                cover fixed no-repeat;
+
+            color: white;
+
+            padding: 40px 15px;
+
+        }
+
 
         /* Background glow */
+
         body::before {
+
             content: "";
+
             position: fixed;
+
             width: 350px;
+
             height: 350px;
-            background: #ffffff;
+
+            background: white;
+
             opacity: 0.04;
+
             filter: blur(100px);
+
             border-radius: 50%;
+
             top: -100px;
+
             left: -100px;
+
             pointer-events: none;
+
         }
+
 
         .container {
+
             width: 100%;
+
             max-width: 600px;
+
+            margin: auto;
+
             text-align: center;
-            animation: fadeIn 1.2s ease;
+
+            animation:
+                fadeIn 1.2s ease;
+
         }
+
+
+        /* NAME */
 
         .name {
-            font-size: clamp(30px, 8vw, 58px);
+
+            font-size:
+                clamp(30px, 8vw, 58px);
+
             font-weight: 800;
+
             letter-spacing: 3px;
-            margin-bottom: 25px;
+
+            margin-bottom: 15px;
+
             line-height: 1.15;
+
             text-transform: uppercase;
 
-            background: linear-gradient(
-                90deg,
-                #ffffff,
-                #aaaaaa,
-                #ffffff
-            );
+            background:
+
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #aaaaaa,
+                    #ffffff
+                );
 
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+            -webkit-text-fill-color:
+                transparent;
 
             background-size: 200% auto;
-            animation: shine 4s linear infinite;
+
+            animation:
+                shine 4s linear infinite;
+
         }
+
 
         .subtitle {
+
             color: #999;
+
             font-size: 14px;
+
             letter-spacing: 4px;
+
             margin-bottom: 25px;
+
             text-transform: uppercase;
+
         }
 
-        /* GIF COVER */
+
+        /* COVER */
+
         .cover {
+
             width: 100%;
+
             aspect-ratio: 16 / 9;
+
             border-radius: 24px;
+
             overflow: hidden;
+
             margin-bottom: 30px;
 
-            border: 1px solid rgba(255,255,255,0.15);
+            border:
+                1px solid
+                rgba(255,255,255,0.15);
 
             box-shadow:
-                0 20px 60px rgba(0,0,0,0.6),
-                0 0 40px rgba(255,255,255,0.04);
+
+                0 20px 60px
+                rgba(0,0,0,0.6),
+
+                0 0 40px
+                rgba(255,255,255,0.04);
 
             background: #111;
+
         }
+
 
         .cover img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover;
+
             display: block;
-            transition: transform 0.6s ease;
+
+            transition:
+                transform 0.6s ease;
+
         }
+
 
         .cover:hover img {
-            transform: scale(1.04);
+
+            transform:
+                scale(1.04);
+
         }
 
-        /* SOCIAL CARDS */
+
+        /* SOCIAL */
+
         .socials {
+
             display: flex;
+
             flex-direction: column;
+
             gap: 14px;
+
         }
+
 
         .social {
+
             text-decoration: none;
+
             color: white;
 
             display: flex;
+
             align-items: center;
 
             padding: 17px 20px;
 
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
+            background:
+                rgba(255,255,255,0.06);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
 
             border-radius: 18px;
 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter:
+                blur(15px);
+
+            -webkit-backdrop-filter:
+                blur(15px);
 
             transition:
-                transform 0.3s ease,
-                background 0.3s ease,
-                border 0.3s ease;
+                transform .3s ease,
+                background .3s ease;
 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,0.2);
+
         }
+
 
         .social:hover {
-            transform: translateY(-4px);
-            background: rgba(255,255,255,0.11);
-            border-color: rgba(255,255,255,0.25);
+
+            transform:
+                translateY(-4px);
+
+            background:
+                rgba(255,255,255,0.11);
+
         }
 
+
         .icon {
+
             width: 45px;
+
             height: 45px;
 
             display: flex;
+
             justify-content: center;
+
             align-items: center;
 
             border-radius: 14px;
 
-            background: rgba(255,255,255,0.08);
+            background:
+                rgba(255,255,255,0.08);
 
             font-size: 21px;
+
             margin-right: 15px;
+
         }
+
 
         .info {
+
             text-align: left;
+
             flex: 1;
+
         }
+
 
         .platform {
+
             display: block;
+
             font-size: 12px;
+
             color: #888;
+
             margin-bottom: 3px;
+
             letter-spacing: 1px;
+
             text-transform: uppercase;
+
         }
+
 
         .username {
+
             font-size: 16px;
+
             font-weight: 600;
+
         }
+
 
         .arrow {
+
             color: #777;
+
             font-size: 20px;
-            transition: transform 0.3s ease;
+
         }
 
-        .social:hover .arrow {
-            transform: translateX(5px);
+
+        /* =================================
+           LIVE CHAT BUTTON
+           ================================= */
+
+        .chat-button {
+
+            position: fixed;
+
+            right: 22px;
+
+            bottom: 22px;
+
+            width: 62px;
+
+            height: 62px;
+
+            border-radius: 50%;
+
+            border: 1px solid
+                rgba(255,255,255,0.25);
+
+            background:
+                rgba(20,20,20,0.85);
+
             color: white;
+
+            font-size: 27px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,0.5);
+
+            backdrop-filter:
+                blur(15px);
+
+            transition:
+                transform .25s ease;
+
+            z-index: 9999;
+
         }
+
+
+        .chat-button:hover {
+
+            transform:
+                scale(1.08);
+
+        }
+
+
+        /* =================================
+           CHAT WINDOW
+           ================================= */
+
+        .chat-window {
+
+            position: fixed;
+
+            right: 20px;
+
+            bottom: 95px;
+
+            width: 350px;
+
+            max-width:
+                calc(100vw - 40px);
+
+            height: 500px;
+
+            background:
+                rgba(15,15,15,0.96);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.15);
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(0,0,0,0.7);
+
+            backdrop-filter:
+                blur(20px);
+
+            overflow: hidden;
+
+            display: none;
+
+            flex-direction: column;
+
+            z-index: 9998;
+
+            animation:
+                chatOpen .25s ease;
+
+        }
+
+
+        .chat-window.active {
+
+            display: flex;
+
+        }
+
+
+        /* CHAT HEADER */
+
+        .chat-header {
+
+            padding: 17px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.1);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+        }
+
+
+        .chat-title {
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+        }
+
+
+        .online {
+
+            font-size: 11px;
+
+            color: #aaa;
+
+            margin-top: 3px;
+
+        }
+
+
+        .close-chat {
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            font-size: 22px;
+
+            cursor: pointer;
+
+        }
+
+
+        /* MESSAGES */
+
+        .chat-messages {
+
+            flex: 1;
+
+            padding: 15px;
+
+            overflow-y: auto;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+        }
+
+
+        .chat-message {
+
+            background:
+                rgba(255,255,255,0.08);
+
+            padding: 10px 12px;
+
+            border-radius: 14px;
+
+            text-align: left;
+
+            word-break: break-word;
+
+        }
+
+
+        .message-name {
+
+            font-size: 11px;
+
+            color: #aaa;
+
+            margin-bottom: 4px;
+
+        }
+
+
+        .message-text {
+
+            font-size: 14px;
+
+            line-height: 1.4;
+
+        }
+
+
+        /* INPUT */
+
+        .chat-input-area {
+
+            padding: 12px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.1);
+
+        }
+
+
+        .chat-name {
+
+            width: 100%;
+
+            padding: 10px;
+
+            margin-bottom: 8px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.12);
+
+            background:
+                rgba(255,255,255,0.06);
+
+            color: white;
+
+            outline: none;
+
+        }
+
+
+        .chat-row {
+
+            display: flex;
+
+            gap: 8px;
+
+        }
+
+
+        .chat-message-input {
+
+            flex: 1;
+
+            padding: 11px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.12);
+
+            background:
+                rgba(255,255,255,0.06);
+
+            color: white;
+
+            outline: none;
+
+        }
+
+
+        .send-button {
+
+            width: 48px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color: black;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+        }
+
+
+        /* FOOTER */
 
         .footer {
+
             margin-top: 30px;
+
             color: #555;
+
             font-size: 12px;
+
             letter-spacing: 1px;
+
         }
 
-        /* Animations */
+
+        /* ANIMATION */
+
         @keyframes fadeIn {
+
             from {
+
                 opacity: 0;
-                transform: translateY(25px);
+
+                transform:
+                    translateY(25px);
+
             }
 
             to {
+
                 opacity: 1;
-                transform: translateY(0);
+
+                transform:
+                    translateY(0);
+
             }
+
         }
 
+
         @keyframes shine {
+
             0% {
-                background-position: 200% center;
+                background-position:
+                    200% center;
             }
 
             100% {
-                background-position: -200% center;
+                background-position:
+                    -200% center;
             }
+
         }
 
-        /* Mobile */
+
+        @keyframes chatOpen {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(15px)
+                    scale(.97);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        /* MOBILE */
+
         @media (max-width: 480px) {
 
             body {
-                padding: 25px 14px;
+
+                padding:
+                    25px 14px;
+
             }
+
 
             .name {
+
                 letter-spacing: 2px;
+
             }
+
 
             .subtitle {
+
                 font-size: 11px;
+
                 letter-spacing: 3px;
+
             }
+
 
             .cover {
+
                 border-radius: 19px;
+
             }
+
 
             .social {
-                padding: 14px 15px;
+
+                padding:
+                    14px 15px;
+
             }
 
-            .icon {
-                width: 42px;
-                height: 42px;
+
+            .chat-window {
+
+                right: 10px;
+
+                bottom: 85px;
+
+                width:
+                    calc(100vw - 20px);
+
+                height: 480px;
+
             }
+
+
+            .chat-button {
+
+                right: 15px;
+
+                bottom: 15px;
+
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <main class="container">
 
-        <!-- NAME -->
-        <h1 class="name">
-            RASHIDUL ISLAM SHIFUL
-        </h1>
-
-        <p class="subtitle">
-            Welcome to my world
-        </p>
-
-        <!-- GIF COVER -->
-        <!-- rashidul.gif -->
-        <div class="cover">
-            <img src="rashidul.gif" alt="Rashidul Islam Shiful">
-        </div>
-
-        <!-- SOCIAL MEDIA -->
-        <div class="socials">
-
-            <!-- INSTAGRAM -->
-            <a
-                class="social"
-                href="https://www.instagram.com/shiful_st/"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <div class="icon">◎</div>
-
-                <div class="info">
-                    <span class="platform">Instagram</span>
-                    <span class="username">@shiful_st</span>
-                </div>
-
-                <span class="arrow">→</span>
-            </a>
+<main class="container">
 
 
-            <!-- DISCORD -->
-            <div class="social">
-                <div class="icon">◉</div>
+    <!-- NAME -->
 
-                <div class="info">
-                    <span class="platform">Discord</span>
-                    <span class="username">shiful.st</span>
-                </div>
+    <h1 class="name">
 
-                <span class="arrow">→</span>
+        RASHIDUL ISLAM SHIFUL
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Welcome to my world
+
+    </p>
+
+
+    <!-- COVER -->
+
+    <div class="cover">
+
+        <img
+            src="rashidul.gif"
+            alt="Rashidul Islam Shiful"
+        >
+
+    </div>
+
+
+    <!-- SOCIAL LINKS -->
+
+    <div class="socials">
+
+
+        <!-- INSTAGRAM -->
+
+        <a
+            class="social"
+            href="https://www.instagram.com/shiful_st/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <div class="icon">
+
+                ◎
+
             </div>
 
 
-            <!-- EMAIL -->
-            <a
-                class="social"
-                href="mailto:rashidul.jp@outlook.com"
+            <div class="info">
+
+                <span class="platform">
+
+                    Instagram
+
+                </span>
+
+                <span class="username">
+
+                    @shiful_st
+
+                </span>
+
+            </div>
+
+
+            <span class="arrow">
+
+                →
+
+            </span>
+
+        </a>
+
+
+        <!-- DISCORD -->
+
+        <div class="social">
+
+            <div class="icon">
+
+                ◉
+
+            </div>
+
+
+            <div class="info">
+
+                <span class="platform">
+
+                    Discord
+
+                </span>
+
+                <span class="username">
+
+                    shiful.st
+
+                </span>
+
+            </div>
+
+
+            <span class="arrow">
+
+                →
+
+            </span>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <a
+            class="social"
+            href="mailto:rashidul.jp@outlook.com"
+        >
+
+            <div class="icon">
+
+                ✉
+
+            </div>
+
+
+            <div class="info">
+
+                <span class="platform">
+
+                    Email
+
+                </span>
+
+                <span class="username">
+
+                    rashidul.jp@outlook.com
+
+                </span>
+
+            </div>
+
+
+            <span class="arrow">
+
+                →
+
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+    <div class="footer">
+
+        © 2026 RASHIDUL ISLAM SHIFUL
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =================================
+     LIVE CHAT BUTTON
+     ================================= -->
+
+<button
+    class="chat-button"
+    onclick="toggleChat()"
+    aria-label="Open Live Chat"
+>
+
+    💬
+
+</button>
+
+
+
+<!-- =================================
+     LIVE CHAT WINDOW
+     ================================= -->
+
+<div
+    class="chat-window"
+    id="chatWindow"
+>
+
+
+    <!-- HEADER -->
+
+    <div class="chat-header">
+
+        <div>
+
+            <div class="chat-title">
+
+                Live Chat
+
+            </div>
+
+            <div class="online">
+
+                ● Welcome to my chat
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="close-chat"
+            onclick="toggleChat()"
+        >
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div
+        class="chat-messages"
+        id="chatMessages"
+    >
+
+    </div>
+
+
+    <!-- INPUT -->
+
+    <div class="chat-input-area">
+
+
+        <input
+            class="chat-name"
+            id="chatName"
+            type="text"
+            placeholder="Your name"
+            maxlength="30"
+        >
+
+
+        <div class="chat-row">
+
+            <input
+                class="chat-message-input"
+                id="chatMessage"
+                type="text"
+                placeholder="Write a message..."
+                maxlength="300"
+                onkeydown="
+                    if(event.key === 'Enter')
+                    sendMessage()
+                "
             >
-                <div class="icon">✉</div>
 
-                <div class="info">
-                    <span class="platform">Email</span>
-                    <span class="username">
-                        rashidul.jp@outlook.com
-                    </span>
-                </div>
 
-                <span class="arrow">→</span>
-            </a>
+            <button
+                class="send-button"
+                onclick="sendMessage()"
+            >
+
+                ➤
+
+            </button>
 
         </div>
 
-        <div class="footer">
-            © 2026 RASHIDUL ISLAM SHIFUL
-        </div>
+    </div>
 
-    </main>
+
+</div>
+
+
+
+<script>
+
+    function toggleChat() {
+
+        const chat =
+            document.getElementById(
+                "chatWindow"
+            );
+
+        chat.classList.toggle(
+            "active"
+        );
+
+    }
+
+</script>
+
 
 </body>
+
 </html>
